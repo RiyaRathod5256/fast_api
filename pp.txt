@@ -1,0 +1,115 @@
+from fastapi import FastAPI
+
+from datetime import datetime
+
+from pydantic import BaseModel
+
+from typing import Annotated
+app = FastAPI()
+
+#Pydantic Model---------------------------------------------------------
+# class User(BaseModel):
+#     id: int
+#     name: str = "John Doe"
+#     signup_ts: datetime | None = None
+#     friends: list[int] = []
+
+
+# external_data = {
+#     "id": "123",
+#     "signup_ts": "2017-06-01 12:22",
+#     "friends": [1, "2", b"3"],
+# }
+
+# user=User(**external_data)
+# print(type(user.id))
+# print(type(user.friends))
+# @app.get("/")
+# def home():
+#     return {}
+
+#Annoted
+# 
+
+#Async--------------------------------------------------------------
+# async allows a function to run asynchronously, and await lets FastAPI pause that function while waiting for a slow operation (database/API/file) and handle other requests in the meantime, improving performance and scalability.
+# Real Life Example: WhatsApp
+# Synchronous
+
+# Imagine sending a message:
+
+# Send message
+# Wait until friend replies
+
+# Only then send another message
+
+# Very slow.
+
+# Asynchronous---------------------------------------------------
+# Send message to Friend 1
+# Send message to Friend 2
+# Send message to Friend 3
+
+# Replies come later
+
+# You don't sit idle waiting.
+# @app.get("/")
+# async def get_users():
+#     users= await db.fetch()
+#     return users
+# ----------------------------------------------------------------------------------
+# A coroutine is a special function created with async def that can pause its ex
+#     ecution using await and later resume from the same point. Unlike threads,
+#     coroutines are managed by Python's event loop, making them lightweight and efficient
+#     for I/O-bound tasks such as database queries, API calls, and file operations.
+
+# ENVIROMENT VARIABLE-------------------------------------------------------
+# 
+
+# FAstApi class---------------------------------------------------------
+# Python class that provides all the functionality for your API
+
+# Path¶----------------------------------------------------------------------
+# "Path" here refers to the last part of the URL starting from the first /.
+
+# So, in a URL like:
+
+
+# https://example.com/items/foo
+# ...the path would be:
+
+
+# /items/foo
+# A "path" is also commonly called an "endpoint" or a "route".
+
+Oeration¶------------------------------------------------------------------------
+"Operation" here refers to one of the HTTP "methods".
+
+One of:
+
+POST
+GET
+PUT
+DELETE
+...and the more exotic ones:
+
+OPTIONS
+HEAD
+PATCH
+TRACE
+
+Operation¶
+"Operation" here refers to one of the HTTP "methods".
+
+One of:
+
+POST
+GET
+PUT
+DELETE
+...and the more exotic ones:
+
+OPTIONS
+HEAD
+PATCH
+TRACE
