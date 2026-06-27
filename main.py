@@ -110,3 +110,12 @@ async def update_field(task_id:int,task_field:Taskfield):
                      return {"key updated successfully"}    
        else:
               return{"task does not exist"}        
+       
+@app.delete("/delete/{task_id}")
+async def delete_fields(task_id:int):
+       for i in task:
+              if i.get("task_id")==task_id:
+                     task.remove(i)
+                     return{"task deleted succesfully"}
+       else:
+              raise HTTPException(status_code=404,detail="task not found")
