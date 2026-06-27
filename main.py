@@ -84,5 +84,29 @@ async def task_read(task_id: Annotated[int,Path(gt=0,lt=20)]):
                      return i
               else:
                      return {"msg":"task does not exist"}
-       
-                       
+class Taskupdate(BaseModel):
+       task_name:str
+       task_status:str
+
+@app.put("/task_update/{task_id}")
+async def task_update(task_id: int,task_update:Taskupdate):
+       for i in task:
+              if i.get("task_id")==task_id:
+                     i["task_name"]=task_update.task_name
+                     i["task_status"]=task_update.task_status
+                     return("task updated successfully")
+              else:
+                     return("task does not exist")
+class Taskfield(BaseModel):
+       task_name:str|None=None
+       task_status:str|None=None     
+@app.patch("/task/{task_id}")
+async def update_field(task_id:int,task_field:Taskfield):
+       for i in task:
+              if i.get("task_id") == task_id:
+                     updated_fields=task_field.model_dump(exclude_unset=True)
+                     for key,value in updated_fields.items():
+                            i[key]=value
+                     return {"key updated successfully"}    
+       else:
+              return{"task does not exist"}        
