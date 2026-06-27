@@ -1,6 +1,7 @@
-from fastapi import FastAPI,HTTPException
+from fastapi import FastAPI,HTTPException,Query,Path
 from pydantic import BaseModel,Field,EmailStr,field_validator,model_validator
 from pwdlib import PasswordHash
+from typing import Annotated
 
 app=FastAPI()
 password_hash = PasswordHash.recommended()
@@ -75,4 +76,13 @@ async def login_user(user_cred:Userlogin):
                                  
              else:
                     raise HTTPException(status_code=404,detail="User not found")
+task=[{"task_id":1,"task_name":"updateapi","task_status":"completed"},{"task_id":2,"task_name":"github","task_status":"pending"}]
+@app.get("/task/{task_id}")
+async def task_read(task_id: Annotated[int,Path(gt=0,lt=20)]):
+       for i in task:
+              if i.get("task_id")==task_id:
+                     return i
+              else:
+                     return {"msg":"task does not exist"}
+       
                        
