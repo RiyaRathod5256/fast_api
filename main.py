@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException
 from pydantic import BaseModel,Field,EmailStr,field_validator,model_validator
+from pwdlib import PasswordHash
 
 app=FastAPI()
+password_hash = PasswordHash.recommended()
 
 class User(BaseModel):
     
@@ -35,10 +37,19 @@ class User(BaseModel):
            return self
         
 
-user_list=list()
+user_list=[]
 @app.post("/user/")
 async def create_user(user: User):
-    user_list.append(user.model_dump())
+    password_hash.hash(user.password)
+    data={
+           "user_id":len(user_list)+1,
+           "username":user.username,
+           "email":user.email,
+           "password":password_hash.hash(user.password)
+    }
+    user_list.append(data)
+    print(user_list)
+
     return {
           "message":"User registered successfully",
           "user":{
@@ -46,3 +57,22 @@ async def create_user(user: User):
                 "email":user.email
           }
     }
+class Userlogin(BaseModel):
+       username:str
+       password:str
+        
+                          
+                     
+
+@app.post("/login/")
+async def login_user(user_cred:Userlogin):
+             for i in user_list:
+                if i["username"]==user_cred.username:
+                          if password_hash.verify(user_cred.password,i["password"]):
+                                 return {"msg":"login successfully"}
+                          else:
+                                 raise HTTPException(status_code=404,detail="invalid user")
+                                 
+             else:
+                    raise HTTPException(status_code=404,detail="User not found")
+                       
