@@ -1,4 +1,4 @@
-from fastapi import FastAPI,HTTPException,Query,Path,Body,Response,Cookie
+from fastapi import FastAPI,HTTPException,Query,Path,Body,Response,Cookie,Depends
 from pydantic import BaseModel,Field,EmailStr,field_validator,model_validator,fields,HttpUrl
 from pwdlib import PasswordHash
 from typing import Annotated
@@ -282,14 +282,18 @@ async def Customer_register(customer:Customer=Body(),task:Task_create=Body()):
 #         "duration": duration,
 #     }
 
-@app.get("/profile/")
-async def get_profile(session_id:Annotated[str|None,Cookie()]=None):
+
+def get_user(session_id:Annotated[str|None,Cookie()]=None):
        
        user=sessions.get(session_id)
-       if user:
-              return{
-                     "msg":"cookie is verified",
-                     "user":user
-              }
-       else:
-              raise HTTPException(status_code=401,detail="No session cookie")
+       if not user:
+              raise HTTPException(401)
+       return user
+
+@app.get("/profile")
+async def profile(user=Depends(get_user)):
+       return{
+               "message": "Welcome",
+        "user": user
+
+       }
